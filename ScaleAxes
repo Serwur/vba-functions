@@ -1,0 +1,26 @@
+Function ScaleAxes(qlStartCell, qlEndCell, chartName)
+    qlValues = ActiveSheet.Range(qlStartCell & ":" & qlEndCell)
+    qlMin = Application.WorksheetFunction.Min(qlValues)
+    qlMax = Application.WorksheetFunction.Max(qlValues)
+    
+    minX = WorksheetFunction.MRound(qlMin - 10, 10)
+    maxX = WorksheetFunction.MRound(qlMax + 10, 10)
+    tick = WorksheetFunction.MRound((maxX - minX) / 10, 5)
+    
+    minScale = minX
+    maxScale = maxX
+    
+    If minScale Mod tick <> 0 Then
+        minScale = minX - (tick - (minX Mod tick))
+    End If
+    
+    If maxScale Mod tick <> 0 Then
+        maxScale = maxX + (tick - (maxX Mod tick))
+    End If
+    
+    With ActiveSheet.ChartObjects(chartName).Chart.Axes(xlValue, xlPrimary)
+    .MinimumScale = minScale
+    .MaximumScale = maxScale
+    .MajorUnit = tick
+    End With
+End Function
